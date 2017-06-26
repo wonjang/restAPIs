@@ -106,8 +106,15 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 REST_FRAMEWORK_DOCS = {
-    'HIDE_DOCS': os.environ.get('HIDE_DRFDOCS', False)
+    'HIDE_DOCS': os.environ.get('HIDE_DRFDOCS', False),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.AllowAny',),
+    'DEFAULT_RENDERER_CLASSES': (
+    'rest_framework.renderers.XMLRenderer',
+    'rest_framework.renderers.JSONRenderer',
+    'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 }
+
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -116,3 +123,7 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+MIDDLEWARE_CLASSES =(
+    'django.middleware.csrf.CsrfViewMiddleware',
+)

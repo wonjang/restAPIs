@@ -13,6 +13,7 @@ class MathReq(models.Model):
     code = models.TextField()
     input = models.TextField(default="0")
     output = models.TextField(default="0")
+    error_msg = models.TextField(default="")
 
     class Meta:
         ordering = ('created',)
