@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
@@ -10,10 +11,11 @@ STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 class MathReq(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
-    code = models.TextField()
+    code = models.TextField(default="")
     input = models.TextField(default="0")
     output = models.TextField(default="0")
     error_msg = models.TextField(default="")
 
+    REQUIRED_FIELDS = ['input']
     class Meta:
         ordering = ('created',)

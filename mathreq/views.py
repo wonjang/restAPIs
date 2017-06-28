@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
@@ -15,28 +16,23 @@ from rest_framework.permissions import AllowAny
 from rest_framework.schemas import SchemaGenerator
 from rest_framework_swagger import renderers
 
-
 class MathReqList(APIView):
     def get(self, request, format=None):
         math_reqs = MathReq.objects.all()
         serializer = MathReqSerializer(math_reqs, many=True)
         return Response(serializer.data)
 
-
 class MathReqFactorial(APIView):
     """
-    - input:10
+    post 인수로 input 을 추가해서 1개의 숫자를 입력한다.
     """
+    serializer_class = MathReqSerializer
     def get(self, request, format=None):
         math_reqs = MathReq.objects.filter(code=u'factorial')
         serializer = MathReqSerializer(math_reqs, many=True)
         return Response(serializer.data)
 
     def post(self, request, format=None):
-        """
-        parameters:
-        - input:10
-        """
         input_value = request.data['input']
         request.data['code'] = u'factorial'
         request.data['output'] = self.calc_factorial(input_value)
@@ -51,8 +47,9 @@ class MathReqFactorial(APIView):
 
 class MathReqCombination(APIView):
     """
-    -input : 10,2
+    post 인수로 input 을 추가해서 ',' 를 구분자로 2개의 숫자를 입력한다.
     """
+    serializer_class = MathReqSerializer
     def get(self, request, format=None):
         math_reqs = MathReq.objects.filter(code=u'combination')
         serializer = MathReqSerializer(math_reqs, many=True)
@@ -69,10 +66,14 @@ class MathReqCombination(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def calc_combination(self,input_value):
-        temp = input_value.split(",")
-        first = int(temp[0])
-        second = int(temp[1])
-        return str(factorial(first) / factorial(second) / factorial(first - second))
+        try:
+            temp = input_value.split(",")
+            first = int(temp[0])
+            second = int(temp[1])
+            return str(factorial(first) / factorial(second) / factorial(first - second))
+        except:
+            self.request.data['error_msg'] = "please input value like 10,2"
+            return 0
 
 
 class MathReqDetail(APIView):
