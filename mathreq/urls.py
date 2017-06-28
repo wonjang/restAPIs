@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
-from mathreq import views
 from rest_framework.urlpatterns import format_suffix_patterns
+
+from mathreq import views
 
 urlpatterns = [
     url(r'^mathreq/$', views.MathReqList.as_view()),
